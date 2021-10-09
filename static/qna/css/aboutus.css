@@ -1,0 +1,24 @@
+
+
+.title{
+    font-family: 'El Messiri', sans-serif;
+    color: rgb(23, 21, 156);
+}
+.img-box{
+    max-height: 400px;
+    max-width: 400px;
+}
+.names{
+    font-family: 'El Messiri', sans-serif;
+    color: rgb(60, 142, 148)
+}
+.detailBox{
+    width: 100%;
+}
+
+.profile-image{
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 4px 3px rgb(185, 184, 184);
+}

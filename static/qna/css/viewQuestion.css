@@ -1,0 +1,35 @@
+
+#main{
+    max-width: 900px;
+}
+.text{
+    color: rgb(79, 26, 177);
+}
+.text:hover{
+    color: rgb(50, 14, 117);
+}
+#writeAbtn{
+    background-color: rgb(38, 23, 170);
+    color: white;
+}
+
+.content{
+    min-height: 150px;
+    height: 120px;
+    padding: 20px;
+    outline: none;
+    overflow-y: scroll;
+}
+#myFormBtn{
+    color: white;
+    background-color: rgb(38, 23, 170);
+}
+#replyBox{
+    display: none;
+}
+.backBtn{
+    position: fixed;
+    top: 80px;
+    left: 20px;
+
+}

@@ -1,0 +1,86 @@
+{% extends 'qna/base.html' %}
+{% load static %}
+
+{% block title %}
+<link rel="stylesheet" href="{% static 'qna/css/contact.css' %}">
+<title>Contact Us | MindQ</title>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="d-flex justify-content-center flex-column p-5">
+            <h1 class="text-center mytextcolor mt-lg-5" style="font-family: 'Lobster', cursive;">Get in touch with us!!
+            </h1>
+            <div class="d-flex flex-column justify-content-center mx-lg-5 mx-0">
+                <form action="/contact/" method="POST" id="contact-form">
+                    {% csrf_token %}
+                    <input type="text" name="name" class="px-3 py-2 mt-4 contactInput" placeholder="Enter your name" required>
+                    <input type="email" name="email" class="px-3 py-2 mt-4 contactInput" placeholder="Your email" required>
+                    <input type="number" name="phone" class="px-3 py-2 mt-4 contactInput"
+                        placeholder="10-digits number" required>
+                    <textarea name="query" id="" placeholder="Write your message here"
+                        class="px-3 py-2 mt-4" required></textarea>
+                    <div class="d-flex justify-content-center">
+                        <button class="px-5 py-2 mt-4">Submit</button>
+                    </div>
+                </form>
+                <p class="text-center text-primary" id="successMsg" style="display: none;">Your query has been submitted</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 d-lg-block d-none">
+        <div class="d-flex justify-content-center flex-column align-items-center p-5">
+            <h5 class='text-center my-5 mytextcolor'>Meet Our brilliant and knowledgeable support team!</h5>
+            <div class="d-flex justify-content-evenly profileBox">
+                <div class="d-flex flex-column justify-content-center">
+                    <img src="{% static 'images/question/ayush.jpg' %}" alt="" height="100px" width="100px"
+                        class="rounded rounded-circle">
+                    <h6 class="text-center mytextcolor mt-2">Ayush Gupta</h6>
+                </div>
+                <div class="d-flex flex-column justify-content-center">
+                    <img src="{% static 'images/question/harsh2.jpg' %}" alt="" height="100px" width="100px"
+                        class="rounded rounded-circle">
+                    <h6 class="text-center mytextcolor mt-2">Harsh Gupta</h6>
+                </div>
+            </div>
+            <div class="d-flex justify-content-evenly profileBox mt-3">
+                <div class="d-flex flex-column justify-content-center">
+                    <img src="{% static 'images/question/sud.jpg' %}" alt="" height="100px" width="100px"
+                        class="rounded rounded-circle ms-3">
+                    <h6 class="text-center mytextcolor mt-2">Sudhankar Singh</h6>
+                </div>
+                <div class="d-flex flex-column justify-content-center">
+                    <img src="{% static 'images/question/aditya.jpg' %}" alt="" height="100px" width="100px"
+                        class="rounded rounded-circle ms-3">
+                    <h6 class="text-center mytextcolor mt-2">Aditya Chaudhary</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h5 class="mytextcolor text-center mt-5 border-top pt-2">Follow us:</h5>
+<div class="d-flex justify-content-center">
+    <a href="" class="mx-1" title="Instagram"><img src="{% static 'images/question/instagram.png' %}" alt=""></a>
+    <a href="" class="mx-1" title="Facebook"><img src="{% static 'images/question/facebook.png' %}" alt=""></a>
+    <a href="" class="mx-1" title="Twitter"><img src="{% static 'images/question/twitter.png' %}" alt=""></a>
+</div>
+
+
+<script>
+    $("#contact-form").submit(function(event) {
+        // Stop form from submitting normally
+        event.preventDefault();
+        var friendForm = $(this);
+        // Send the data using post
+        var posting = $.post( friendForm.attr('action'), friendForm.serialize() );
+        var f = document.getElementById("contact-form")
+        f.reset()
+        $("#successMsg").fadeIn(300).fadeOut(4000)
+        
+    });
+</script>
+
+{% endblock %}

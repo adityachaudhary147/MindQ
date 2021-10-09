@@ -1,0 +1,75 @@
+{% extends 'qna/base.html' %}
+{% load static %}
+
+{% block title %}
+<link rel="stylesheet" href="{% static 'qna/css/aboutus.css' %}">
+<title>About | MindQ</title>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container pt-lg-5 pt-2">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="d-flex flex-column p-3">
+                <h1 class="title">ABOUT</h1>
+                <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium labore molestiae fugiat porro totam quis quibusdam obcaecati error esse. Voluptatibus adipisci deleniti, veritatis rem cumque qui eos repellendus doloribus. Explicabo possimus cumque voluptatibus molestiae. Quae debitis illum doloremque reprehenderit consequuntur odit obcaecati accusantium totam numquam perferendis quisquam reiciendis possimus, voluptatum minima alias modi repellendus eaque ipsam porro explicabo, velit expedita, sapiente nostrum dicta? Ad itaque, molestias nemo neque ut dignissimos exercitationem eveniet, soluta dicta modi maiores recusandae velit tempora error perspiciatis quia laudantium laborum quasi omnis ex sunt dolore. Nihil aliquid cum, accusantium quam autem sunt! Voluptate iusto eius incidunt!</p>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="d-flex mx-3">
+                <img src="{% static 'images/question/logo.jpg' %}" alt="" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <h1 class="title text-center mb-5">Meet team MindQ</h1>
+    <div class="d-flex flex-lg-row flex-column">
+        <div class="img-box d-flex justify-content-center">
+            <img src="{% static 'images/question/harsh2.jpg' %}" alt="" class="profile-image mt-lg-0 mt-3">
+        </div>
+        <div class="detailBox">
+            <h2 class="names text-center my-0 mt-2 py-0 mt-lg-5">HARSH GUPTA</h2>
+            <p class="text-center">- SRMGPC Lucknow</p>
+            <p class="lead text-center px-lg-5 px-3">"Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora
+                adipisci modi, eum laboriosam hic illum velit harum iste incidunt expedita?"</p>
+        </div>
+    </div>
+    <div class="d-flex flex-lg-row-reverse flex-column">
+        <div class="img-box d-flex justify-content-center">
+            <img src="{% static 'images/question/ayush.jpg' %}" alt="" class="profile-image mt-lg-0 mt-3">
+        </div>
+        <div class="detailBox">
+            <h2 class="names text-center my-0 mt-2 py-0 mt-lg-5">AYUSH GUPTA</h2>
+            <p class="text-center">- KNIT Sultanpur</p>
+            <p class="lead text-center px-lg-5 px-3">"Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora
+                adipisci modi, eum laboriosam hic illum velit harum iste incidunt expedita?"</p>
+        </div>
+    </div>
+    <div class="d-flex flex-lg-row flex-column">
+        <div class="img-box d-flex justify-content-center">
+            <img src="{% static 'images/question/aditya.jpg' %}" alt="" class="profile-image mt-lg-0 mt-3">
+        </div>
+        <div class="detailBox">
+            <h2 class="names text-center my-0 mt-2 py-0 mt-lg-5">ADITYA CHAUDHARY</h2>
+            <p class="text-center">- NIT Jalandhar</p>
+            <p class="lead text-center px-lg-5 px-3">"Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora
+                adipisci modi, eum laboriosam hic illum velit harum iste incidunt expedita?"</p>
+        </div>
+    </div>
+    <div class="d-flex flex-lg-row-reverse flex-column">
+        <div class="img-box d-flex justify-content-center">
+            <img src="{% static 'images/question/sud.jpg' %}" alt="" class="profile-image mt-lg-0 mt-3">
+        </div>
+        <div class="detailBox">
+            <h2 class="names text-center my-0 mt-2 py-0 mt-lg-5">SUDHANKAR SINGH</h2>
+            <p class="text-center">- KNIT Sultanpur</p>
+            <p class="lead text-center px-lg-5 px-3">"Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora
+                adipisci modi, eum laboriosam hic illum velit harum iste incidunt expedita?"</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

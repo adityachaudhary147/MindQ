@@ -1,0 +1,315 @@
+{% extends 'qna/base.html' %}
+{% load static %}
+
+
+{% block title %}
+<link rel="stylesheet" href="{% static 'post/css/viewPost.css' %}">
+<title>ViewPost</title>
+{% endblock %}
+
+{% block content %}
+<div id="main" class="row">
+
+    <div class="col-lg-6 col-12">
+        <div class="post bg-white d-flex flex-column shadow-sm mt-3 mx-3 mx-lg-2">
+            <div class="d-flex justify-content-between p-3">
+                <div class="d-flex">
+                    <div>
+                        <img src="{{ v_post.user.profile.profile_image.url }}" alt="" height="50px" width="50px"
+                            class="rounded rounded-circle">
+                    </div>
+                    <div class="d-flex flex-column mt-2 ps-2">
+                        <h6 class="name my-0">{{ v_post.user.profile }}</h6>
+                        <small class="text-black-50">posted on {{ v_post.created_on }}</small>
+                    </div>
+                </div>
+                <div>
+                    <div class="dropdown">
+                        <a href="{% url 'posts' %}" class="btn" title="Go to previous page"><img src="{% static 'post/images/backButton.png' %}" alt=""></a>
+                    </div>
+                </div>
+            </div>
+            <div class="px-3">
+                <p class="text-secondary">{{ v_post.description|linebreaks }}</p>
+            </div>
+            <div class="d-flex flex-column px-3">
+                {% for j in v_post.url %}
+                {% if j != 'none' %}
+                <a href="{{ j }}" class='text-decoration-none'>{{ j }}</a>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <a href="#">
+                <img src="{{ v_post.file.url }}" alt="" class="img-fluid p-2">
+            </a>
+            <div class="d-flex justify-content-between p-2">
+                <div class="d-flex">
+                    <form action="{% url 'like-post-view' %}" method="POST" class='like-form' id='{{v_post.id}}'>
+                        {% csrf_token %}
+                        <input type="hidden" name="post_id" value={{v_post.id}}>
+
+                        <button type="submit" class="like-btn{{v_post.id}} btn px-0">
+                            {% if request.user not in v_post.likes.all %}
+                            <img src="{% static 'post/images/like.png' %}" alt="">
+                            {% else %}
+                            <img src="{% static 'post/images/liked.png' %}" alt="">
+                            {% endif %}
+                        </button>
+                        <div class="like-count{{v_post.id}} d-inline"> {{v_post.num_likes}}</div>
+                    </form>
+                    <form action="{% url 'dislike-post-view' %}" method="POST" class='dislike-form' id='d{{v_post.id}}'>
+                        {% csrf_token %}
+                        <input type="hidden" name="post_id" value={{v_post.id}}>
+
+                        <button type="submit" class="dislike-btn{{v_post.id}} btn px-0 ms-2">
+                            {% if request.user not in v_post.dislikes.all %}
+                            <img src="{% static 'post/images/dislike.png' %}" alt="">
+                            {% else %}
+                            <img src="{% static 'post/images/disliked.png' %}" alt="">
+                            {% endif %}
+                        </button>
+                        <div class="dislike-count{{v_post.id}} d-inline"> {{v_post.num_dislikes}}</div>
+                    </form>
+                    <button class="btn px-0 ps-2" title="Comment"><img src="{% static 'post/images/commentPost.png' %}"
+                            alt=""><span class="ms-1">{{count}}</span></button>
+                </div>
+                <div class="d-flex">
+                    <button class="btn clipboard" title="Copy Url"><img src="{% static 'post/images/postShare.png' %}"
+                            alt=""></button>
+                    <form action="{% url 'star-post-view' %}" method="POST" class='star-form' id='s{{v_post.id}}'>
+                        {% csrf_token %}
+                        <input type="hidden" name="post_id" value={{v_post.id}}>
+                        <button type="submit" class="star-btn{{v_post.id}} btn px-0 ms-2">
+                            {% if request.user not in v_post.star.all %}
+                            <img src="{% static 'post/images/star.png' %}" alt="">
+                            {% else %}
+                            <img src="{% static 'post/images/starred.png' %}" alt="">
+                            {% endif %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% load mptt_tags %}
+    <div class="col-lg-6 col-12">
+        <div class="d-flex flex-column mt-3 mx-3 mx-lg-2">
+            <h5 class="bg-white my-0 p-2">Comments <span class='text-secondary'>({{count}})</span></h5>
+
+            <div style="display:block;" class="bg-white shadow-sm mt-2">
+                <form id="myForm" method="post" class="p-3">
+                    {{ comment_form }}
+                    {% csrf_token %}
+                    <button type="submit" class="btn"
+                        style="width: 100%;border:none;color:rgb(24, 24, 190);background-color:white;padding:6px;">Post</button>
+                </form>
+            </div>
+
+            {% recursetree comments %}
+            <div class="d-flex flex-column mt-2 bg-white shadow-sm">
+                <div class='d-flex mt-2 p-2'>
+                    <div><img src="{{ node.user.profile.profile_image.url }}" alt="" height="45px" width="45px"
+                            class='rounded rounded-circle'>
+                    </div>
+                    <div class="d-flex ms-2 flex-column mt-1">
+                        <h6 class="name my-0">{{ node.user.profile }}</h6>
+                        <small class='text-black-50'>commented on {{ node.created_on }}</small>
+                    </div>
+                </div>
+                <p class="text-secondary ps-3 mt-1 py-0" id="{{ node.id }}">{{ node.content }}</p>
+                {% if node.level < 2 %} <button class="btn text-primary replyBTN" id="replyBTN{{node.id}}"
+                    onclick="myFunction({{ node.id }})">Reply</button>
+                    {% endif %}
+            </div>
+            {% if not node.is_leaf_node %}
+            <div class='children ps-2 ps-md-5'>
+                {{ children }}
+            </div>
+            {% endif %}
+            {% endrecursetree %}
+        </div>
+        <a class="p-2 bg-dark text-white addFav text-decoration-none" id="addFavMsg"></a>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#urlButton").click(function () {
+            $("#url").toggleClass("d-none");
+        })
+
+        $('.like-form').submit(function (e) {
+            e.preventDefault()
+
+            const post_id = $(this).attr('id')
+
+            const likeText = $(`.like-btn${post_id}`).html()
+            const dislikeText = $(`.dislike-btn${post_id}`).html()
+
+            const trim = $.trim(likeText)
+            const trimdislike = $.trim(dislikeText);
+
+            const url = $(this).attr('action')
+
+            let res;
+            let res2;
+
+            const likes = $(`.like-count${post_id}`).text()
+            const trimCount = parseInt(likes)
+            const dislikes = $(`.dislike-count${post_id}`).text()
+            const trimCountdis = parseInt(dislikes)
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'post_id': post_id,
+                },
+                success: function (response) {
+                    if (trim === `<img src="{% static 'post/images/like.png' %}" alt="">`) {
+                        $(`.like-btn${post_id}`).html(`<img src="{% static 'post/images/liked.png' %}" alt="">`)
+                        res = trimCount + 1
+                        if (trimdislike === `<img src="{% static 'post/images/disliked.png' %}" alt="">`) {
+                            $(`.dislike-btn${post_id}`).html(`<img src="{% static 'post/images/dislike.png' %}" alt="">`)
+                            res2 = trimCountdis - 1;
+                        }
+                    }
+                    else {
+                        $(`.like-btn${post_id}`).html(`<img src="{% static 'post/images/like.png' %}" alt="">`)
+                        res = trimCount - 1
+                    }
+
+                    $(`.like-count${post_id}`).text(res)
+                    $(`.dislike-count${post_id}`).text(res2)
+                },
+                error: function (response) {
+                    console.log('error', response)
+                }
+            })
+
+        })
+
+        $('.dislike-form').submit(function (e) {
+            e.preventDefault()
+
+            let post_id = $(this).attr('id')
+            post_id = post_id.slice(1);
+
+            const dislikeText = $(`.dislike-btn${post_id}`).html()
+            const likeText = $(`.like-btn${post_id}`).html()
+            const trim = $.trim(dislikeText)
+            const trimlike = $.trim(likeText);
+
+            const url = $(this).attr('action')
+
+            let res;
+            let res2;
+
+            const dislikes = $(`.dislike-count${post_id}`).text()
+            const trimCount = parseInt(dislikes)
+            const likes = $(`.like-count${post_id}`).text()
+            const trimCountLike = parseInt(likes)
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'post_id': post_id,
+                },
+                success: function (response) {
+                    if (trim === `<img src="{% static 'post/images/dislike.png' %}" alt="">`) {
+                        $(`.dislike-btn${post_id}`).html(`<img src="{% static 'post/images/disliked.png' %}" alt="">`)
+                        res = trimCount + 1
+                        if (trimlike === `<img src="{% static 'post/images/liked.png' %}" alt="">`) {
+                            $(`.like-btn${post_id}`).html(`<img src="{% static 'post/images/like.png' %}" alt="">`)
+                            res2 = trimCountLike - 1;
+                        }
+                    }
+                    else {
+                        $(`.dislike-btn${post_id}`).html(`<img src="{% static 'post/images/dislike.png' %}" alt="">`)
+                        res = trimCount - 1
+                    }
+
+                    $(`.dislike-count${post_id}`).text(res)
+                    $(`.like-count${post_id}`).text(res2)
+                },
+                error: function (response) {
+                    console.log('error', response)
+                }
+            })
+
+        })
+
+        $('.star-form').submit(function (e) {
+            e.preventDefault()
+
+            let post_id = $(this).attr('id')
+            post_id = post_id.slice(1);
+
+            const starText = $(`.star-btn${post_id}`).html()
+            const trim = $.trim(starText)
+
+            const url = $(this).attr('action')
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'post_id': post_id,
+                },
+                success: function (response) {
+                    if (trim === `<img src="{% static 'post/images/star.png' %}" alt="">`) {
+                        $(`.star-btn${post_id}`).html(`<img src="{% static 'post/images/starred.png' %}" alt="">`)
+                        $("#addFavMsg").text("Added to Favourite").fadeIn(500).fadeOut(1600);
+                    }
+                    else {
+                        $(`.star-btn${post_id}`).html(`<img src="{% static 'post/images/star.png' %}" alt="">`)
+                        $("#addFavMsg").text("Removed from Favourite").fadeIn(500).fadeOut(1600);
+                    }
+                },
+                error: function (response) {
+                    console.log('error', response)
+                }
+            })
+
+        })
+
+
+
+    })
+
+    var $temp = $("<input>");
+    var $url = $(location).attr('href');
+
+    $('.clipboard').on('click', function () {
+        $("body").append($temp);
+        $temp.val($url).select();
+        document.execCommand("copy");
+        $("#addFavMsg").text("URL Copied to Clipboard").fadeIn(500).fadeOut(1600);
+        $temp.remove();
+    })
+
+    function myFunction(id) {
+        if (document.contains(document.getElementById("newForm"))) {
+            document.getElementById("newForm").remove();
+        }
+        document.getElementById("replyBTN" + id).style.display = 'none';
+        var d1 = document.getElementById(id);
+        d1.insertAdjacentHTML('afterend',
+            '<form id="newForm" class="form-insert py-2" method="post"> \
+                  <select name="parent" class="d-none" id="id_parentt"> \
+                  <option value="' + id + '" selected="' + id + '"></option> \
+                  </select> \
+                  <textarea name="content" placeholder="Write your comment" required id="id_content" style="border: none;width:100%;padding:15px;outline:none;height:40px"></textarea> \
+                  {% csrf_token %} \
+                  <button type="submit" class="btn" style="width: 100%;border:none;color:rgb(24, 24, 190);background-color:white;padding:6px;">Post</button> \
+                </form>');
+
+        //document.querySelector('#id_parentt [value="' + id + '"]').selected = true;
+    }
+</script>
+
+{% endblock %}

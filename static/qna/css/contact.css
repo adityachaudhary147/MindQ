@@ -1,0 +1,33 @@
+.mytextcolor{
+    color: rgb(47, 26, 167);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.contactInput{
+    width: 100%;
+    border: none;
+    box-shadow: 1px 1px 5px rgb(112, 69, 214);
+    border-radius: 10px;
+    outline: none;
+}
+textarea{
+    width: 100%;
+    height: 120px;
+    border: none;
+    box-shadow: 1px 1px 5px rgb(104, 45, 199);
+    border-radius: 10px;
+    outline: none;
+}
+button{
+    background-color: rgb(51, 25, 167);
+    color: white;
+    border-radius: 5px;
+}
+.profileBox{
+    width: 100%;
+}

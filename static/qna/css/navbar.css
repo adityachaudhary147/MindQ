@@ -1,0 +1,33 @@
+/* navbar code */
+#navbars{
+    position: sticky;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    z-index: 4;
+}
+#logo{
+    color: rgb(31, 22, 168);
+    font-family: 'El Messiri', sans-serif;
+    font-size: 2.2rem;
+    text-shadow: 1px 1px 1px rgb(136, 136, 136);
+}
+.margin-search{
+    margin: 0 26% 0 30%;
+}
+.style-search{
+    border: none;
+    border-bottom: 1px solid rgb(31, 22, 168);
+    outline: none;
+}
+.searchIcon{
+    border: none;
+}
+.navbarLink{
+    color: rgb(81, 43, 184);
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+
+.hideTitle{
+    display: none;
+}

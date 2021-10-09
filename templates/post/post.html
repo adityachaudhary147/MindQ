@@ -1,0 +1,405 @@
+{% extends 'qna/base.html' %}
+{% load static %}
+
+{% block title %}
+<link rel="stylesheet" href="{% static 'post/css/post.css' %}">
+<title>Posts | MindQ</title>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-3 d-lg-block d-none pe-0">
+        <div class="my-2 d-flex flex-column justify-content-start">
+            <div class="d-flex flex-column bg-white shadow-sm mb-2">
+                <h6 class="my-0 p-3">Category</h6>
+                <a href="" class="px-4 py-2 text-decoration-none border-top tags"><img
+                        src="{% static 'qna/trend.png' %}" alt=""> Hot</a>
+                <a href="" class="px-4 py-2 text-decoration-none border-top tags"><img src="{% static 'qna/new.png' %}"
+                        alt="">
+                    New</a>
+                <a href="" class="px-4 py-2 text-decoration-none border-top tags"><img
+                        src="{% static 'qna/recommend.png' %}" alt=""> Following</a>
+            </div>
+            <div class="d-flex flex-column mt-5 shadow-sm bg-white">
+                <h6 class="p-3 my-0">Top Question</h6>
+                <div class='border-top p-3'>
+                    <p class="my-0 mb-2">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Architecto quaerat
+                        impedit ipsum!</p>
+                    <small class='text-black-50'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae
+                        quia quasi repellendus officia cum eaque.</small>
+                </div>
+                <div class='border-top p-3'>
+                    <p class="my-0 mb-2">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Architecto quaerat
+                        impedit ipsum!</p>
+                    <small class='text-black-50'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae
+                        quia quasi repellendus officia cum eaque.</small>
+                </div>
+                <div class='border-top p-3'>
+                    <p class="my-0 mb-2">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Architecto quaerat
+                        impedit ipsum!</p>
+                    <small class='text-black-50'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae
+                        quia quasi repellendus officia cum eaque.</small>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'questions' %}" class="p-2 fw-bold text-decoration-none">View QnA</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-12">
+        <div class="d-flex mt-2 flex-column me-3 ms-4">
+            <form action="{% url 'posts' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row px-0">
+                    <div class="col-6 px-0 border bg-white">
+                        <div class="d-flex justify-content-center py-2">
+                            <label for="url" id="urlButton" class="urlLabel"><img
+                                    src="{% static 'post/images/url.png' %}" alt=""> Add Url</label>
+                        </div>
+                    </div>
+                    <div class="col-6 px-0 border bg-white">
+                        <div class='d-flex justify-content-center py-2'>
+                            <label for="file"><img src="{% static 'post/images/image.png' %}" alt="">
+                                Photo</label>
+                            <input type="file" name="file" id="file" accept="image/*" required hidden>
+                        </div>
+                    </div>
+                    <textarea name="postDescription" id="postDescription" class="py-2 px-3 border"
+                        placeholder="Write description" required></textarea>
+                    <div class="input-group px-0 d-none" id="url">
+                        <span class="input-group-text" id="basic-addon1"><i class="fa fa-link"></i></span>
+                        <input type="text" class="p-2 form-control border"
+                            placeholder="Add url (Use ',' to add more urls)" name="url" aria-label="Url"
+                            aria-describedby="basic-addon1">
+                    </div>
+                    <button type="submit" id="addPostBtn" class="btn mt-1">Add Post</button>
+                </div>
+            </form>
+
+            <div class="d-flex flex-column">
+                <!-- post code -->
+                {% for i in all_post %}
+                <div class="post bg-white d-flex flex-column shadow-sm mt-3">
+                    <div class="d-flex justify-content-between p-3 pb-0">
+                        <div class="d-flex">
+                            <div>
+                                <img src="{{ i.user.profile.profile_image.url }}" alt="" height="50px" width="50px"
+                                    class="rounded rounded-circle">
+                            </div>
+                            <div class="d-flex flex-column mt-1 ps-2">
+                                <h6 class="name my-0">{{ i.user.profile }}</h6>
+                                <small class="text-black-50">posted on {{ i.created_on }}</small>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="dropdown">
+                                <button class="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <img src="{% static 'post/images/menu.png' %}" alt="">
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <li><a class="dropdown-item" href="{% url 'viewpost' i.id %}">View Post</a></li>
+                                    <li><button class="dropdown-item clipboard" value="http://127.0.0.1:8000/posts/viewpost/{{i.id}}/">Share</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-3">
+                        <p class="text-secondary">{{ i.description|linebreaks }}</p>
+                    </div>
+                    <div class="d-flex flex-column px-3">
+                        {% for j in i.url %}
+                        {% if j != 'none' %}
+                        <a href="{{ j }}" class='text-decoration-none'>{{ j }}</a>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'viewpost' i.id %}">
+                        <img src="{{ i.file.url }}" alt="" class="img-fluid p-2">
+                    </a>
+
+                    <div class="d-flex justify-content-between p-2">
+                        <div class="d-flex">
+                            <form action="{% url 'like-post-view' %}" method="POST" class='like-form' id='{{i.id}}'>
+                                {% csrf_token %}
+                                <input type="hidden" name="post_id" value={{i.id}}>
+
+                                <button type="submit" class="like-btn{{i.id}} btn px-0">
+                                    {% if request.user not in i.likes.all %}
+                                    <img src="{% static 'post/images/like.png' %}" alt="">
+                                    {% else %}
+                                    <img src="{% static 'post/images/liked.png' %}" alt="">
+                                    {% endif %}
+                                </button>
+                                <div class="like-count{{i.id}} d-inline"> {{i.num_likes}}</div>
+                            </form>
+                            <form action="{% url 'dislike-post-view' %}" method="POST" class='dislike-form'
+                                id='d{{i.id}}'>
+                                {% csrf_token %}
+                                <input type="hidden" name="post_id" value={{i.id}}>
+
+                                <button type="submit" class="dislike-btn{{i.id}} btn px-0 ms-2">
+                                    {% if request.user not in i.dislikes.all %}
+                                    <img src="{% static 'post/images/dislike.png' %}" alt="">
+                                    {% else %}
+                                    <img src="{% static 'post/images/disliked.png' %}" alt="">
+                                    {% endif %}
+                                </button>
+                                <div class="dislike-count{{i.id}} d-inline"> {{i.num_dislikes}}</div>
+                            </form>
+                            <a href="{% url 'viewpost' i.id %}" class="btn px-0 ps-1 ms-2" title="Comment"><img
+                                    src="{% static 'post/images/commentPost.png' %}" alt=""><span
+                                    class="ms-1"></span></a>
+                        </div>
+                        <div class="d-flex">
+                            <button class="btn clipboard" value="http://127.0.0.1:8000/posts/viewpost/{{i.id}}/" title="Share"><img src="{% static 'post/images/postShare.png' %}"
+                                    alt=""></button>
+                            <form action="{% url 'star-post-view' %}" method="POST" class='star-form' id='s{{i.id}}'>
+                                {% csrf_token %}
+                                <input type="hidden" name="post_id" value={{i.id}}>
+                                <button type="submit" class="star-btn{{i.id}} btn px-0 ms-2">
+                                    {% if request.user not in i.star.all %}
+                                    <img src="{% static 'post/images/star.png' %}" alt="">
+                                    {% else %}
+                                    <img src="{% static 'post/images/starred.png' %}" alt="">
+                                    {% endif %}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <!-- end of post code -->
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="col-lg-3 d-lg-block d-none">
+        <div class="d-flex flex-column mt-2 shadow-sm bg-white me-3">
+            <h6 class="p-2 pb-1">Who to follow</h6>
+            <a href="" class="p-3 d-flex text-decoration-none border-top">
+                <div>
+                    <img src="{% static 'post/images/ayush.jpg' %}" alt="" class="rounded-circle rounded" height="50px"
+                        width="50px">
+                </div>
+                <div class="d-flex ms-2 flex-column">
+                    <h6 class="name my-0 mt-1">Aryan Soni</h6>
+                    <small class='text-black-50'>23 Followers, 40 Following</small>
+                </div>
+            </a>
+            <a href="" class="p-3 d-flex text-decoration-none border-top">
+                <div>
+                    <img src="{% static 'post/images/ayush.jpg' %}" alt="" class="rounded-circle rounded" height="50px"
+                        width="50px">
+                </div>
+                <div class="d-flex ms-2 flex-column">
+                    <h6 class="name my-0 mt-1">Aryan Soni</h6>
+                    <small class='text-black-50'>23 Followers, 40 Following</small>
+                </div>
+            </a>
+            <a href="" class="p-3 d-flex text-decoration-none border-top">
+                <div>
+                    <img src="{% static 'post/images/ayush.jpg' %}" alt="" class="rounded-circle rounded" height="50px"
+                        width="50px">
+                </div>
+                <div class="d-flex ms-2 flex-column">
+                    <h6 class="name my-0 mt-1">Aryan Soni</h6>
+                    <small class='text-black-50'>23 Followers, 40 Following</small>
+                </div>
+            </a>
+            <a href="" class="p-3 d-flex text-decoration-none border-top">
+                <div>
+                    <img src="{% static 'post/images/ayush.jpg' %}" alt="" class="rounded-circle rounded" height="50px"
+                        width="50px">
+                </div>
+                <div class="d-flex ms-2 flex-column">
+                    <h6 class="name my-0 mt-1">Aryan Soni</h6>
+                    <small class='text-black-50'>23 Followers, 40 Following</small>
+                </div>
+            </a>
+            <a href="" class="p-3 d-flex text-decoration-none border-top">
+                <div>
+                    <img src="{% static 'post/images/ayush.jpg' %}" alt="" class="rounded-circle rounded" height="50px"
+                        width="50px">
+                </div>
+                <div class="d-flex ms-2 flex-column">
+                    <h6 class="name my-0 mt-1">Aryan Soni</h6>
+                    <small class='text-black-50'>23 Followers, 40 Following</small>
+                </div>
+            </a>
+        </div>
+        <a class="p-2 bg-dark text-white addFav text-decoration-none" id="addFavMsg"></a>
+    </div>
+    
+</div>
+
+<script>
+
+
+    $(document).ready(function () {
+        $("#urlButton").click(function () {
+            $("#url").toggleClass("d-none");
+        })
+
+        $('.like-form').submit(function (e) {
+            e.preventDefault()
+
+            const post_id = $(this).attr('id')
+
+            const likeText = $(`.like-btn${post_id}`).html()
+            const dislikeText = $(`.dislike-btn${post_id}`).html()
+
+            const trim = $.trim(likeText)
+            const trimdislike = $.trim(dislikeText);
+
+            const url = $(this).attr('action')
+
+            let res;
+            let res2;
+
+            const likes = $(`.like-count${post_id}`).text()
+            const trimCount = parseInt(likes)
+            const dislikes = $(`.dislike-count${post_id}`).text()
+            const trimCountdis = parseInt(dislikes)
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'post_id': post_id,
+                },
+                success: function (response) {
+                    if (trim === `<img src="{% static 'post/images/like.png' %}" alt="">`) {
+                        $(`.like-btn${post_id}`).html(`<img src="{% static 'post/images/liked.png' %}" alt="">`)
+                        res = trimCount + 1
+                        if (trimdislike === `<img src="{% static 'post/images/disliked.png' %}" alt="">`) {
+                            $(`.dislike-btn${post_id}`).html(`<img src="{% static 'post/images/dislike.png' %}" alt="">`)
+                            res2 = trimCountdis - 1;
+                        }
+                    }
+                    else {
+                        $(`.like-btn${post_id}`).html(`<img src="{% static 'post/images/like.png' %}" alt="">`)
+                        res = trimCount - 1
+                    }
+
+                    $(`.like-count${post_id}`).text(res)
+                    $(`.dislike-count${post_id}`).text(res2)
+                },
+                error: function (response) {
+                    console.log('error', response)
+                }
+            })
+
+        })
+
+        $('.dislike-form').submit(function (e) {
+            e.preventDefault()
+
+            let post_id = $(this).attr('id')
+            post_id = post_id.slice(1);
+
+            const dislikeText = $(`.dislike-btn${post_id}`).html()
+            const likeText = $(`.like-btn${post_id}`).html()
+            const trim = $.trim(dislikeText)
+            const trimlike = $.trim(likeText);
+
+            const url = $(this).attr('action')
+
+            let res;
+            let res2;
+
+            const dislikes = $(`.dislike-count${post_id}`).text()
+            const trimCount = parseInt(dislikes)
+            const likes = $(`.like-count${post_id}`).text()
+            const trimCountLike = parseInt(likes)
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'post_id': post_id,
+                },
+                success: function (response) {
+                    if (trim === `<img src="{% static 'post/images/dislike.png' %}" alt="">`) {
+                        $(`.dislike-btn${post_id}`).html(`<img src="{% static 'post/images/disliked.png' %}" alt="">`)
+                        res = trimCount + 1
+                        if (trimlike === `<img src="{% static 'post/images/liked.png' %}" alt="">`) {
+                            $(`.like-btn${post_id}`).html(`<img src="{% static 'post/images/like.png' %}" alt="">`)
+                            res2 = trimCountLike - 1;
+                        }
+                    }
+                    else {
+                        $(`.dislike-btn${post_id}`).html(`<img src="{% static 'post/images/dislike.png' %}" alt="">`)
+                        res = trimCount - 1
+                    }
+
+                    $(`.dislike-count${post_id}`).text(res)
+                    $(`.like-count${post_id}`).text(res2)
+                },
+                error: function (response) {
+                    console.log('error', response)
+                }
+            })
+
+        })
+
+        $('.star-form').submit(function (e) {
+            e.preventDefault()
+
+            let post_id = $(this).attr('id')
+            post_id = post_id.slice(1);
+
+            const starText = $(`.star-btn${post_id}`).html()
+            const trim = $.trim(starText)
+
+            const url = $(this).attr('action')
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'post_id': post_id,
+                },
+                success: function (response) {
+                    if (trim === `<img src="{% static 'post/images/star.png' %}" alt="">`) {
+                        $(`.star-btn${post_id}`).html(`<img src="{% static 'post/images/starred.png' %}" alt="">`)
+                        $("#addFavMsg").text("Added to Favourite").fadeIn(500).fadeOut(1600);
+                    }
+                    else {
+                        $(`.star-btn${post_id}`).html(`<img src="{% static 'post/images/star.png' %}" alt="">`)
+                        $("#addFavMsg").text("Removed from Favourite").fadeIn(500).fadeOut(1600);
+                    }
+                },
+                error: function (response) {
+                    console.log('error', response)
+                }
+            })
+
+        })
+
+        var $temp = $("<input>");
+
+        $('.clipboard').on('click', function () {
+            const url = $(this).attr('value')
+            console.log(url)
+            $("body").append($temp);
+            $temp.val(url).select();
+            document.execCommand("copy");
+            $("#addFavMsg").text("URL Copied to Clipboard").fadeIn(500).fadeOut(1600);
+            $temp.remove();
+        })
+
+
+
+    })
+
+
+
+
+</script>
+{% endblock %}

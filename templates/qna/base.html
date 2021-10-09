@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'qna/css/navbar.css' %}">
+    
+    {% block title %}
+    
+    <title>Title</title>
+    {% endblock %}
+</head>
+
+<body class="p-0 bg-light">
+    <nav class="navbar navbar-expand-lg pb-0 px-2 py-1 navbar-light bg-white shadow-sm" id="navbars">
+        <div class="container-fluid">
+            <a class="navbar-brand py-0 my-0 ps-1" id="logo">MindQ</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <form class="d-lg-flex d-none margin-search">
+                    <input class="style-search px-4 pb-1" type="search" placeholder="Search" aria-label="Search">
+                    <button class="bg-white searchIcon" type="submit"><img src="{% static 'qna/search.png' %}"
+                            height="24px" width="24px" alt=""></button>
+                </form>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item ps-2">
+                        <a class="nav-link d-flex" aria-current="page" href="{% url 'questions' %}" id="link1">
+
+                            <span class='hideTitle me-lg-2 me-3 navbarLink' id="title1">QnA</span>
+                            <img src="{% static 'qna/q.png' %}" alt="">
+
+                            <span class='d-lg-none d-block navbarLink ps-lg-0 ps-3'>QnA</span>
+                        </a>
+                    </li>
+                    <li class="nav-item ps-2">
+                        <a class="nav-link d-flex" href="{% url 'posts' %}" id="link2">
+
+                            <span class='hideTitle me-lg-2 me-3 navbarLink' id="title2">Post</span>
+                            <img src="{% static 'qna/letter-p.png' %}" alt="">
+
+                            <span class='d-lg-none d-block navbarLink ps-lg-0 ps-3'>Post</span>
+                        </a>
+                    </li>
+                    <li class="nav-item ps-2">
+                        <a class="nav-link d-flex" href="{% url 'peopleYouMayKnow' %}" id="link3">
+
+                            <span class='hideTitle me-lg-2 me-3 navbarLink' id="title3">People</span>
+                            <img src="{% static 'qna/group.png' %}" alt="">
+
+                            <span class='d-lg-none d-block navbarLink ps-lg-0 ps-3'>People</span>
+                        </a>
+                    </li>
+                    {% if request.user.is_authenticated %}
+                    <li class="nav-item ps-2">
+                        <a class="nav-link d-flex" href="{% url 'profile' %}" id="link4">
+
+                            <span class='hideTitle me-lg-2 me-3 navbarLink' id="title4">Profile</span>
+                            <img src="{% static 'qna/profile-user.png' %}" alt="">
+                            <span class='d-lg-none d-block navbarLink ps-lg-0 ps-3'>Profile</span></a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item ps-2">
+                        <a class="nav-link d-flex" href="{% url 'login' %}" id="link4">
+
+                            <span class='hideTitle me-lg-2 me-3 navbarLink' id="title4">Login</span>
+                            <img src="{% static 'qna/profile-user.png' %}" alt="">
+                            <span class='d-lg-none d-block navbarLink ps-lg-0 ps-3'>Login</span></a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item ps-2">
+                        <a class="nav-link d-flex" href="{% url 'contactUs' %}" id="link5">
+
+                            <span class='hideTitle me-lg-2 me-3 navbarLink' id="title5">Contact</span>
+                            <img src="{% static 'qna/phone.png' %}" alt="">
+
+
+                            <span class='d-lg-none d-block navbarLink ps-lg-0 ps-3'>Contact</span></a>
+                    </li>
+                    <li class="nav-item ps-2">
+                        <a class="nav-link d-flex" href="{% url 'about' %}" id="link6">
+
+                            <span class='hideTitle me-lg-2 me-3 navbarLink' id="title6">About</span>
+                            <img src="{% static 'qna/info.png' %}" alt="" id="link6">
+
+
+                            <span class='d-lg-none d-block navbarLink ps-lg-0 ps-3'>About</span></a>
+                    </li>
+
+                    {% if request.user.is_authenticated %}
+                    <li class="nav-item ps-2 d-lg-none d-block">
+                        <a class="nav-link d-flex" href="{% url 'logout' %}" id="link6">
+                            <span class='hideTitle me-lg-2 me-3 navbarLink' id="title6">Logout</span>
+                            <img src="{% static 'qna/logout.png' %}" alt="" id="link6">
+                            <span class='d-lg-none d-block navbarLink ps-lg-0 ps-3'>Logout</span></a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <form class="d-lg-none d-flex">
+                    <input class="style-search px-3" type="search" placeholder="Search" aria-label="Search">
+                    <button class="bg-white searchIcon" type="submit"><img src="{% static 'qna/search.png' %}"
+                            height="24px" width="24px" alt=""></button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    {% block content %}
+    
+    {% endblock %}
+    <script type="text/javascript" src="{% static 'qna/js/navbar.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.5.4/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+</body>
+
+</html>

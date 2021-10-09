@@ -1,0 +1,583 @@
+{% extends 'qna/base.html' %}
+{% load static %}
+
+{% block title %}
+<link rel="stylesheet" href="{% static 'user_profile/css/profile.css' %}">
+<title>Profile</title>
+{% endblock %}
+
+{% block content %}
+    
+<div class="d-flex justify-content-center">
+
+
+    <div class="px-0 col-lg-6 col-12">
+
+        <img src="{% static 'user_profile/images/cover.jpg' %}" alt="" class="img-fluid coverImg">
+        <div class="d-flex justify-content-center align-items-center flex-column profile-box">
+            <div data-bs-toggle="modal">
+                <img src="{{ user.profile.profile_image.url }}" alt="" class="profile-img">
+            </div>
+            <h2 class='my-0 name'>{{ user.profile }}</h2>
+            <h6 class="name">@{{ user }}</h6>
+            <h6 class="text-center mt-3">{{ user.profile.job }}</h6>
+            <p class="my-0 text-center text-dark px-lg-0 px-4">{{ user.profile.bio }}</p>
+            <div class="d-flex justify-content-evenly mt-3 bottom-bar align-items-center">
+                <a id="button1" class="btn name mx-lg-5">QnA</a>
+                <a id="button2" class="btn name mx-lg-5">Post</a>
+                <!-- <a id="button3" class="btn name mx-lg-5 d-lg-none">Followers</a>
+                <a id="button4" class="btn name mx-lg-5 d-lg-none">Following</a>
+                <a id="button5" class="btn name mx-lg-5">Saved QnA</a>
+                <a id="button6" class="btn name mx-lg-5">Saved Post</a> -->
+            </div>
+
+            <div id="qnaBox" class="w-100">
+
+                {% for q in qna %}
+                <div class="mt-2 border d-flex flex-column p-3 p-lg-4 mx-lg-3 mx-4 shadow-sm bg-white">
+                    <!-- Question BOX -->
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex">
+                            <img src="{% static 'default_profile.png' %}" alt="" height="40px" width="40px"
+                                class='rounded rounded-circle'>
+                            <div class='d-flex flex-column ms-3 align-items-start'>
+                                <h6 class="my-0">{{ q.user.username }} </h6>
+                                <small class="my-0 py-0 text-black-50">asked on {{ q.created_on}}</small>
+                            </div>
+                        </div>
+                        <div>
+                            <img src="images/menu.png" alt="" class='m-2'>
+                        </div>
+                    </div>
+                    <h5 class="mt-3 mb-0 pt-2 border-top">{{ q.title }} </h5>
+                    <small class="text-black-50 mt-2">{{q.description}}</small>
+                    <p class="my-0 pt-2 text-secondary">{{ q. }}</p>
+                    <div class="d-flex justify-content-between mt-2" id="1">
+                        <div class="d-flex justify-content-lg-start pt-2">
+                            <a href="{% url 'question' pk=q.slug %}" class="text-secondary text-decoration-none"
+                                id="myAnswerBox"><img src="{% static 'images/question/write.png' %}" alt="write"><span
+                                    class="ms-1 me-2">Answer</span></a>
+                            <a href="{% url 'question' pk=q.slug %}" class="text-secondary text-decoration-none"><img
+                                    src="{% static 'images/question/eye2.png' %}" alt=""><span class="ms-1 me-2">
+                                    View</span></a>
+                        </div>
+                        <div class="d-flex pt-2 vote{{q.key}}" id='votes{{ q.key }}'>
+                            <form>
+                                <!-- <img class="{{q.key}}vote-up" src="{% static 'images/question/up-arrow.png' %}" title="Vote this thread UP. (click again to undo)" />
+                                -->
+                                {% csrf_token %}
+                                <img class="{{q.key}}vote-up selected"
+                                    src="{% static 'images/question/upvote-on.png' %}" title="Vote UP Button" />
+
+                                <img class="{{q.key}}vote-down" src="{% static 'images/question/downarrow.png' %}"
+                                    title=" Vote down Button " />
+                                <span id='{{q.key}}hell'></span>
+                                <a href="" class="ms-2 ms-lg-2"><img src="{% static 'images/question/share.png' %}"
+                                        alt="share"></a>
+                                <a href="" class="ms-2 ms-lg-2"><img src="{% static 'images/question/bookmark.png' %}"
+                                        alt="bookmark"></a>
+                            </form>
+
+                        </div>
+                    </div>
+
+                    <!-- answer box -->
+
+                    <script>
+                        function checkhere() {
+                            console.log("hello");
+                            $.ajax(
+                                {
+                                    type: "GET",
+                                    url: "{% url 'check' %}",
+                                    data: { 'id': '{{q.key}}' },// serializes the form's elements.
+                                    dataType: 'json',
+                                    success: function (res) {
+                                        $('#{{q.key}}hell').html(res[0]);
+                                        console.log(res[1]);
+
+                                        if (res[1] == false) {
+                                            console.log("hello33");
+                                            if ($('.{{q.key}}vote-up').hasClass('selected')) {
+                                                $('.{{q.key}}vote-up').removeAttr('src').attr('src', "{% static 'images/question/up-arrow.png' %}").removeClass('selected');
+                                            }
+                                        }
+                                        if (res[2] == true) {
+                                            // console.log("hello"); 
+                                            // console.log("check selected class");
+                                            $('.{{q.key}}vote-down').removeAttr('src').attr('src', "{% static 'images/question/downvote-on.png' %}").addClass('selected');
+
+                                        }
+                                    },
+                                });
+
+
+                        }
+                        checkhere();
+
+                        $('.{{q.key}}vote-up').click(function () {
+
+                            console.log("he;;p");
+                            var qid = {{ q.key }
+                        };
+                        if ($('.{{q.key}}vote-down').hasClass('selected')) {
+                            $('.{{q.key}}vote-down').click();
+                        }
+
+                        var vote_type = 'up';
+                        if ($(this).hasClass('selected')) {
+
+                            console.log('this is already upvoted ');
+                            // impleent remove upvote..
+                            var vote_action = 'recall-vote'
+
+
+                            $.ajax(
+                                {
+                                    type: "POST",
+                                    url: "{% url 'vote' %}",
+                                    data: { 'csrfmiddlewaretoken': '{{ csrf_token }}', 'vote': 'up', 'action': 'remove', 'id': qid }, // serializes the form's elements.
+                                    dataType: 'json',
+                                    success: function (res) {
+
+                                        $('#{{q.key}}hell').html(res);
+
+                                        if ($('.{{q.key}}vote-up').hasClass('selected')) {
+                                            $('.{{q.key}}vote-up').removeAttr('src').attr('src', "{% static 'images/question/up-arrow.png' %}").removeClass('selected');
+                                        }
+
+                                    },
+                                });
+                            // $.post('/vote', { 'csrfmiddlewaretoken': '{{ csrf_token }}',id: id, type: vote_type, action: vote_action}, function (response) {
+                            //     if (isInt(response)) {
+                            //         $('img.vote-up').removeAttr('src').attr('src', "{% static 'images/question/up-arrow.png' %}").removeClass('selected');
+                            //         $('div.vote-tally span.num').html(response);
+                            //     }
+                            // });
+                        } else {
+                            var vote_action = 'vote'
+                            console.log("this is not upvoted");
+
+                            $.ajax(
+                                {
+                                    type: "POST",
+                                    url: "{% url 'vote' %}",
+                                    data: { 'csrfmiddlewaretoken': '{{ csrf_token }}', 'vote': 'up', 'action': 'add', 'id': qid }, // serializes the form's elements.
+                                    dataType: 'json',
+                                    success: function (res) {
+
+                                        $('#{{q.key}}hell').html(res);
+
+                                        if ($('.{{q.key}}vote-up').hasClass('selected')) {
+                                            $('.{{q.key}}vote-up').removeAttr('src').attr('src', "{% static 'images/question/up-arrow.png' %}").removeClass('selected');
+                                        }
+                                        else {
+                                            $('.{{q.key}}vote-up').removeAttr('src').attr('src', "{% static 'images/question/upvote-on.png' %}").addClass('selected');
+
+                                        }
+
+                                    },
+                                });
+                            // implement upvote here
+                            // $.post('vote', { id: id, type: vote_type, action: vote_action }, function (response) {
+                            //     if (isInt(response)) {
+                            //         $('img.vote-up').removeAttr('src').attr('src', "{% static 'images/question/up-arrow.png' %}").addClass('selected');
+                            //         $('div.vote-tally span.num').html(response);
+                            //     }
+                            // });
+                        }
+                        });
+
+                        $('.{{q.key}}vote-down').click(function () {
+
+                            var vote_type = 'up';
+                            var qid = {{ q.key }
+                        };
+                        if ($('.{{q.key}}vote-up').hasClass('selected')) {
+                            $('.{{q.key}}vote-up').click();
+                        }
+                        if ($(this).hasClass('selected')) {
+
+                            console.log("this is already down voted");
+
+                            // implement removing downvote here ...
+                            var vote_action = 'recall-vote';
+                            $.ajax(
+                                {
+                                    type: "POST",
+                                    url: "{% url 'vote' %}",
+                                    data: { 'csrfmiddlewaretoken': '{{ csrf_token }}', 'vote': 'down', 'action': 'remove', 'id': qid }, // serializes the form's elements.
+                                    dataType: 'json',
+                                    success: function (res) {
+
+                                        $('#{{q.key}}hell').html(res);
+
+                                        if ($('.{{q.key}}vote-down').hasClass('selected')) {
+                                            $('.{{q.key}}vote-down').removeAttr('src').attr('src', "{% static 'images/question/downarrow.png' %}").removeClass('selected');
+                                        }
+
+                                    },
+                                });
+
+
+                            // $.post('/vote', { 'csrfmiddlewaretoken': '{{ csrf_token }}', id: id, type: vote_type, action: vote_action }, function (response) {
+                            //     if (isInt(response)) {
+                            //         $('img.vote-up').removeAttr('src').attr('src', "{% static 'images/question/up-arrow.png' %}").removeClass('selected');
+                            //         $('div.vote-tally span.num').html(response);
+                            //     }
+                            // });
+                        } else {
+                            console.log("this is not downvoted");
+                            // implement adding downvote here...
+
+                            var vote_action = 'vote'
+
+                            $.ajax(
+                                {
+                                    type: "POST",
+                                    url: "{% url 'vote' %}",
+                                    data: { 'csrfmiddlewaretoken': '{{ csrf_token }}', 'vote': 'down', 'action': 'add', 'id': qid }, // serializes the form's elements.
+                                    dataType: 'json',
+                                    success: function (res) {
+
+                                        $('#{{q.key}}hell').html(res);
+
+                                        if ($('.{{q.key}}vote-down').hasClass('selected')) {
+                                            $('.{{q.key}}vote-down').removeAttr('src').attr('src', "{% static 'images/question/downarrow.png' %}").removeClass('selected');
+                                        }
+                                        else {
+                                            $('.{{q.key}}vote-down').removeAttr('src').attr('src', "{% static 'images/question/downvote-on.png' %}").addClass('selected');
+
+                                        }
+
+                                    },
+                                });
+                            // $.post('vote', { id: id, type: vote_type, action: vote_action }, function (response) {
+                            //     if (isInt(response)) {
+                            //         $('img.vote-up').removeAttr('src').attr('src', "{% static 'images/question/up-arrow.png' %}").addClass('selected');
+                            //         $('div.vote-tally span.num').html(response);
+                            //     }
+                            // });
+                        }
+                        });
+
+                        // For submitting Answer
+                        $("#myFormBtn{{q.key}}").click(function (e) {
+                            console.log("hello");
+                            e.preventDefault(); // avoid to execute the actual submit of the form.
+                            var desc2 = $('#content{{q.key}}').html();
+                            var description = $('#hnj').val();
+                            // var title = $('#askQuestionInput').val();
+                            var urlt = $('#urlhnj{{q.key}}').val();
+                            var qid = '{{q.key}}';
+                            if (desc2 == '') {
+                                alert('Answer can not be empty');
+                                return;
+                            }
+
+                            $.ajax(
+                                {
+                                    type: "POST",
+                                    url: "{% url 'create-answer' %}",
+                                    data: { 'csrfmiddlewaretoken': '{{ csrf_token }}', 'description': desc2, 'urlt': urlt, 'qid': qid }, // serializes the form's elements.
+                                    dataType: 'json',
+                                    success: function () {
+                                        console.log("submitted");
+                                        $('#content{{q.key}}').html('');
+                                        $('#urlhnj{{q.key}}').val('');
+                                        $('submitans{{q.key}}').append(" <span class='label label-important' style='color:green'> Sucess Done </span>");
+                                        $('submitans{{q.key}}').append("<button class='btn   btn-success px-4 px-lg-5' id='viewans{{ q.slug }}'>View other Answer</button>");
+
+                                        window.location.replace('{% url 'question' pk=q.slug %}');
+                                        // show response from the php script.
+                                    }
+                                });
+
+
+                        });
+                    </script>
+                    <!-- end of answer box -->
+                </div>
+                {% endfor %}
+
+            </div>
+            <div id="postBox" class="px-lg-9 px-4">
+
+                {% for i in posts %}
+                <div class="post bg-white d-flex flex-column shadow-sm mt-3">
+                    <div class="d-flex justify-content-between p-3 pb-0">
+                        <div class="d-flex">
+                            <div>
+                                <img src="{{ i.user.profile.profile_image.url }}" alt="" height="50px" width="50px"
+                                    class="rounded rounded-circle">
+                            </div>
+                            <div class="d-flex flex-column mt-1 ps-2">
+                                <h6 class="name my-0">{{ i.user.profile }}</h6>
+                                <small class="text-black-50">posted on {{ i.created_on }}</small>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="dropdown">
+                                <button class="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <img src="{% static 'post/images/menu.png' %}" alt="">
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <li><a class="dropdown-item" href="{% url 'viewpost' i.id %}">View Post</a></li>
+                                    <li><button class="dropdown-item clipboard"
+                                            value="http://127.0.0.1:8000/posts/viewpost/{{i.id}}/">Share</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-3">
+                        <p class="text-secondary">{{ i.description|linebreaks }}</p>
+                    </div>
+                    <div class="d-flex flex-column px-3">
+                        {% for j in i.url %}
+                        {% if j != 'none' %}
+                        <a href="{{ j }}" class='text-decoration-none'>{{ j }}</a>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'viewpost' i.id %}">
+                        <img src="{{ i.file.url }}" alt="" class="img-fluid p-2">
+                    </a>
+
+                    <div class="d-flex justify-content-between p-2">
+                        <div class="d-flex">
+                            <form action="{% url 'like-post-view' %}" method="POST" class='like-form' id='{{i.id}}'>
+                                {% csrf_token %}
+                                <input type="hidden" name="post_id" value={{i.id}}>
+
+                                <button type="submit" class="like-btn{{i.id}} btn px-0">
+                                    {% if request.user not in i.likes.all %}
+                                    <img src="{% static 'post/images/like.png' %}" alt="">
+                                    {% else %}
+                                    <img src="{% static 'post/images/liked.png' %}" alt="">
+                                    {% endif %}
+                                </button>
+                                <div class="like-count{{i.id}} d-inline"> {{i.num_likes}}</div>
+                            </form>
+                            <form action="{% url 'dislike-post-view' %}" method="POST" class='dislike-form'
+                                id='d{{i.id}}'>
+                                {% csrf_token %}
+                                <input type="hidden" name="post_id" value={{i.id}}>
+
+                                <button type="submit" class="dislike-btn{{i.id}} btn px-0 ms-2">
+                                    {% if request.user not in i.dislikes.all %}
+                                    <img src="{% static 'post/images/dislike.png' %}" alt="">
+                                    {% else %}
+                                    <img src="{% static 'post/images/disliked.png' %}" alt="">
+                                    {% endif %}
+                                </button>
+                                <div class="dislike-count{{i.id}} d-inline"> {{i.num_dislikes}}</div>
+                            </form>
+                            <a href="{% url 'viewpost' i.id %}" class="btn px-0 ps-1 ms-2" title="Comment"><img
+                                    src="{% static 'post/images/commentPost.png' %}" alt=""><span
+                                    class="ms-1"></span></a>
+                        </div>
+                        <div class="d-flex">
+                            <button class="btn clipboard" value="http://127.0.0.1:8000/posts/viewpost/{{i.id}}/"
+                                title="Share"><img src="{% static 'post/images/postShare.png' %}" alt=""></button>
+                            <form action="{% url 'star-post-view' %}" method="POST" class='star-form' id='s{{i.id}}'>
+                                {% csrf_token %}
+                                <input type="hidden" name="post_id" value={{i.id}}>
+                                <button type="submit" class="star-btn{{i.id}} btn px-0 ms-2">
+                                    {% if request.user not in i.star.all %}
+                                    <img src="{% static 'post/images/star.png' %}" alt="">
+                                    {% else %}
+                                    <img src="{% static 'post/images/starred.png' %}" alt="">
+                                    {% endif %}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+
+
+
+<!-- Optional JavaScript; choose one of the two! -->
+
+<script>
+    $(document).ready(function () {
+
+        $("#qnaBox, #followersBox, #followingBox, #savedQnaBox, #savedPostBox").hide();
+
+        $("#button1").click(function () {
+            $("#postBox, #followersBox, #followingBox, #savedQnaBox, #savedPostBox").hide(300);
+            $("#qnaBox").show(300);
+        })
+        $("#button2").click(function () {
+            $("#qnaBox, #followersBox, #followingBox, #savedQnaBox, #savedPostBox").hide(300);
+            $("#postBox").show(300);
+        })
+
+
+        $('.like-form').submit(function (e) {
+            e.preventDefault()
+
+            const post_id = $(this).attr('id')
+
+            const likeText = $(`.like-btn${post_id}`).html()
+            const dislikeText = $(`.dislike-btn${post_id}`).html()
+
+            const trim = $.trim(likeText)
+            const trimdislike = $.trim(dislikeText);
+
+            const url = $(this).attr('action')
+
+            let res;
+            let res2;
+
+            const likes = $(`.like-count${post_id}`).text()
+            const trimCount = parseInt(likes)
+            const dislikes = $(`.dislike-count${post_id}`).text()
+            const trimCountdis = parseInt(dislikes)
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'post_id': post_id,
+                },
+                success: function (response) {
+                    if (trim === `<img src="{% static 'post/images/like.png' %}" alt="">`) {
+                        $(`.like-btn${post_id}`).html(`<img src="{% static 'post/images/liked.png' %}" alt="">`)
+                        res = trimCount + 1
+                        if (trimdislike === `<img src="{% static 'post/images/disliked.png' %}" alt="">`) {
+                            $(`.dislike-btn${post_id}`).html(`<img src="{% static 'post/images/dislike.png' %}" alt="">`)
+                            res2 = trimCountdis - 1;
+                        }
+                    }
+                    else {
+                        $(`.like-btn${post_id}`).html(`<img src="{% static 'post/images/like.png' %}" alt="">`)
+                        res = trimCount - 1
+                    }
+
+                    $(`.like-count${post_id}`).text(res)
+                    $(`.dislike-count${post_id}`).text(res2)
+                },
+                error: function (response) {
+                    console.log('error', response)
+                }
+            })
+
+        })
+
+        $('.dislike-form').submit(function (e) {
+            e.preventDefault()
+
+            let post_id = $(this).attr('id')
+            post_id = post_id.slice(1);
+
+            const dislikeText = $(`.dislike-btn${post_id}`).html()
+            const likeText = $(`.like-btn${post_id}`).html()
+            const trim = $.trim(dislikeText)
+            const trimlike = $.trim(likeText);
+
+            const url = $(this).attr('action')
+
+            let res;
+            let res2;
+
+            const dislikes = $(`.dislike-count${post_id}`).text()
+            const trimCount = parseInt(dislikes)
+            const likes = $(`.like-count${post_id}`).text()
+            const trimCountLike = parseInt(likes)
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'post_id': post_id,
+                },
+                success: function (response) {
+                    if (trim === `<img src="{% static 'post/images/dislike.png' %}" alt="">`) {
+                        $(`.dislike-btn${post_id}`).html(`<img src="{% static 'post/images/disliked.png' %}" alt="">`)
+                        res = trimCount + 1
+                        if (trimlike === `<img src="{% static 'post/images/liked.png' %}" alt="">`) {
+                            $(`.like-btn${post_id}`).html(`<img src="{% static 'post/images/like.png' %}" alt="">`)
+                            res2 = trimCountLike - 1;
+                        }
+                    }
+                    else {
+                        $(`.dislike-btn${post_id}`).html(`<img src="{% static 'post/images/dislike.png' %}" alt="">`)
+                        res = trimCount - 1
+                    }
+
+                    $(`.dislike-count${post_id}`).text(res)
+                    $(`.like-count${post_id}`).text(res2)
+                },
+                error: function (response) {
+                    console.log('error', response)
+                }
+            })
+
+        })
+
+        $('.star-form').submit(function (e) {
+            e.preventDefault()
+
+            let post_id = $(this).attr('id')
+            post_id = post_id.slice(1);
+
+            const starText = $(`.star-btn${post_id}`).html()
+            const trim = $.trim(starText)
+
+            const url = $(this).attr('action')
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'post_id': post_id,
+                },
+                success: function (response) {
+                    if (trim === `<img src="{% static 'post/images/star.png' %}" alt="">`) {
+                        $(`.star-btn${post_id}`).html(`<img src="{% static 'post/images/starred.png' %}" alt="">`)
+                        $("#addFavMsg").text("Added to Favourite").fadeIn(500).fadeOut(1600);
+                    }
+                    else {
+                        $(`.star-btn${post_id}`).html(`<img src="{% static 'post/images/star.png' %}" alt="">`)
+                        $("#addFavMsg").text("Removed from Favourite").fadeIn(500).fadeOut(1600);
+                    }
+                },
+                error: function (response) {
+                    console.log('error', response)
+                }
+            })
+
+        })
+
+        var $temp = $("<input>");
+
+        $('.clipboard').on('click', function () {
+            const url = $(this).attr('value')
+            console.log(url)
+            $("body").append($temp);
+            $temp.val(url).select();
+            document.execCommand("copy");
+            $("#addFavMsg").text("URL Copied to Clipboard").fadeIn(500).fadeOut(1600);
+            $temp.remove();
+        })
+
+
+    })
+</script>
+{% endblock %}

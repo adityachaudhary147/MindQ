@@ -1,0 +1,117 @@
+{% extends 'qna/base.html' %}
+{% load static %}
+
+{% block title %}
+<link rel="stylesheet" href="{% static 'user_profile/css/peopleYouMayKnow.css' %}">
+<title>People You May Know</title>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 px-0 mx-0">
+            <a href="#" class="btn filterbtn d-block mx-lg-0 mx-4">New</a>
+        </div>
+        <div class="col-md-6 px-0 mx-0">
+            <a href="#" class="btn filterbtn d-block mx-lg-0 mx-4">Popular</a>
+        </div>
+    </div>
+</div>
+<div class="main">
+
+    {% for i in profiles %}
+    {% if i.user.pk == 2 or i.user == request.user %}
+
+    {% else %}
+
+    <div class="profile-card shadow-sm">
+        <div class="card-header">
+            <div class="pic">
+                <img src="{{ i.profile_image.url }}" alt="">
+            </div>
+            <a class="name" href="{% url 'viewProfile' i.user.pk %}">{{ i.name }}</a>
+            <a href="{% url 'viewProfile' i.user.pk %}" class="username">@{{ i.user }}</a>
+            <div class="desc">{{ i.job }}</div>
+            <form action="{% url 'follow-view' %}" method="POST" class='follow-form mt-2' id='{{i.key}}'>
+                {% csrf_token %}
+                <input type="hidden" name="profile_id" value={{i.key}}>
+                <button type="submit" class="btn px-5 follow-btn follow-btn{{i.key}} px-0">
+                    {% if request.user not in i.followers.all %}
+                    <span>Follow</span>
+                    {% else %}
+                    <span>Unfollow</span>
+                    {% endif %}
+                </button>
+            </form>
+            <!-- <a href="#" class="follow-btn">Follow</a> -->
+        </div>
+        <div class="card-footer">
+            <div class="numbers">
+                <!-- <div class="item">
+                    <span>10</span>
+                    Posts
+                </div>
+                <div class="border"></div> -->
+                <div class="item">
+                    <span class="followers-count{{ i.key }}">{{ i.num_followers }}</span>
+                    Followers
+                </div>
+                <div class="border"></div>
+                <div class="item">
+                    <span>{{ i.num_following }}</span>
+                    Following
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+    {% endfor %}
+
+</div>
+
+
+<script>
+    $('.follow-form').submit(function (e) {
+        e.preventDefault()
+
+        const profile_id = $(this).attr('id')
+        console.log(profile_id)
+
+        const followText = $(`.follow-btn${profile_id}`).html()
+
+        const trim = $.trim(followText)
+
+        const url = $(this).attr('action')
+
+        const followersCount = $(`.followers-count${profile_id}`).text();
+        const intFCount = parseInt(followersCount)
+
+        let res;
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                'profile_id': profile_id,
+            },
+            success: function (response) {
+                if (trim === `<span>Follow</span>`) {
+                    $(`.follow-btn${profile_id}`).html(`<span>Unfollow</span>`)
+                    res = intFCount + 1
+                }
+                else {
+                    $(`.follow-btn${profile_id}`).html(`<span>Follow</span>`)
+                    res = intFCount - 1
+                }
+                $(`.followers-count${profile_id}`).text(res);
+            },
+            error: function (response) {
+                console.log('error', response)
+            }
+        })
+
+    })
+</script>
+{% endblock %}

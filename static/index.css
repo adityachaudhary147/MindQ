@@ -1,0 +1,119 @@
+
+
+#button1{
+    border: 1px solid rgb(20, 20, 155);
+    color: rgb(36, 36, 167);
+    background-color: white;
+}
+#button1:hover{
+    border: 1px solid rgb(20, 20, 155);
+    color: white;
+    background-color: rgb(20, 20, 155);
+}
+
+#button2{
+    border: 1px solid rgb(20, 20, 155);
+    color: white;
+    background-color: rgb(20, 20, 155);
+}
+#button2:hover{
+    border: 1px solid rgb(20, 20, 155);
+    color: rgb(20, 20, 155);
+    background-color: white;
+}
+.categoryButton{
+    width: 175px;
+    background-color: white;
+    border: 1px solid rgb(20, 20, 143);
+    color: rgb(43, 43, 163);
+
+}
+.categoryButton:hover{
+    width: 175px;
+    background-color: rgb(20, 20, 143);
+    border: 1px solid rgb(20, 20, 143);
+    color: white;
+
+}
+.tags{
+    color: grey;
+}
+.tags:hover{
+    color: rgb(5, 5, 160);
+    font-weight: 500;
+}
+#phoneCategoryBox{
+    display: none;
+}
+#phoneTagBox{
+    display: none;
+}
+
+.content{
+    min-height: 150px;
+    padding: 20px;
+    outline: rgb(49, 49, 49);
+}
+
+#myFormBtn{
+    background-color: rgb(23, 23, 177);
+    color: white;
+}
+a{
+    cursor: pointer;
+}
+
+/* css for modal */
+#keyPoints{
+    background-color: rgb(249, 249, 255);
+    border: 2px solid rgb(23, 23, 155);
+    color: rgb(39, 39, 179);
+}
+#askQuestionInput{
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid rgb(2, 2, 97);
+    outline: none;
+}
+#addUrlInput{
+    width: 100%;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid rgb(17, 44, 165);
+}
+#submitButton{
+    background-color: rgb(34, 34, 165);
+    color: white;
+}
+#addTopicInput{
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid rgb(20, 20, 161);
+    outline: none;
+}
+#addTopicTextarea{
+    width: 100%;
+    height: 120px;
+    outline: none;
+}
+#addTopicUrl{
+    width: 100%;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid rgb(18, 18, 146);
+}
+#addTopicBtn{
+    background-color: rgb(34, 34, 165);
+    color: white;
+}
+
+
+.replyBox{
+    display: none;
+}
+
+@media only screen and (max-width: 1500px) and (min-width:1024px){
+    .margin-search{
+        margin: 0 20% 0 20%;
+    }
+}

@@ -1,0 +1,28 @@
+{% extends 'qna/base.html' %}
+
+<!--Block content goes below-->
+
+
+{% block content %}
+
+<h1>Hello, world!</h1>
+<h1>Home</h1>
+<h4>{{ request.user }}</h4>
+{% if request.user.is_authenticated %}
+<a href="{% url 'logout' %}" class='btn btn-outline-danger'>Logout</a>
+{% else %}
+<a href="{% url 'login' %}" class='btn btn-outline-success'>Login</a>
+<a href="{% url 'signup' %}" class='btn btn-outline-secondary'>Signup</a>
+{% endif %}
+
+<p id="para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed recusandae quis quod!</p>
+<button id="button">Click</button>
+
+
+<script>
+    $("#button").click(function () {
+        $("#para").toggle(600);
+    })
+</script>
+
+{% endblock %}
